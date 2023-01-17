@@ -43,6 +43,17 @@ def files_IsTest():
 """
 ProjectPaths Class testing
 """
+def test_Files_SetAllProjectPaths(files):
+    """
+    JDL 1/17/23
+    """
+    files.SetAllProjectPaths()
+    assert files.path_scripts.split(os.sep)[-2] == proj_abbrev + '_scripts'
+    assert files.path_tests.split(os.sep)[-2] == 'tests'
+    assert files.path_data.split(os.sep)[-2] == proj_abbrev + '_data'
+    assert files.path_case_studies.split(os.sep)[-2] == proj_abbrev + '_case_studies'
+
+
 def test_Files_SetFolderPathsIsTest(files_IsTest):
     """
     JDL 1/16/23

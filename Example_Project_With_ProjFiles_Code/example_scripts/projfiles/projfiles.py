@@ -71,7 +71,8 @@ class Files():
         Set strings for project-specific files and paths
         """
         #Instance Project Paths and set top-level folder names and paths
-        self.BuildLstPaths(iLevel=3)
+        iLevels = 3
+        self.BuildLstPaths(iLevels)
         self.SetPathRoot()
         self.SetFolderPaths()
 
@@ -79,7 +80,7 @@ class Files():
         self.pf_credentials = self.path_root + 'credentials.csv'
 
         #ColInfo location
-        self.spf_colinfo = self.spathscripts + 'colinfo.xlsx'
+        self.spf_colinfo = self.path_scripts + 'colinfo.xlsx'
         if self.IsTest: self.spf_colinfo = self.path_root + 'colinfo.xlsx'
 
         #Example for Standalone project file
