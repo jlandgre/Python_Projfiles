@@ -1,6 +1,6 @@
 #Version 1/17/23
 #J.D. Landgrebe/Data-Delve Engineer LLC
-#Covered under MIT Open Source License per 
+#Covered under MIT Open Source License (https://github.com/jlandgre/Python_Projfiles)
 import inspect
 import os
 
@@ -13,24 +13,24 @@ import os
 class Files():
     """
     Class for keeping track of project files in standard project folder structure
-    
+
     __init__() Arguments:
       proj_abbrev [String] project prefix string for folder names
-      sPFHome [String] name of a Home subdirectory within 
+      sPFHome [String] name of a Home subdirectory within
         proj/proj_case_studies folder
       IsTest [Boolean] Toggles between production and testing (IsTest=True).
       sTestsSubdir[String] allows files (related to specific issues) to be placed
-        in subfolders within the Proj/proj_scripts/tests subfolder. 
-        
-        For example, if Issues List issue 42 relates to solving a bug, the folder 
-        "tests/issue_042_2023_10_BugFix" subfolder would contain example files 
-        recreate the issue along with text or Word doc documentation exlaining 
+        in subfolders within the Proj/proj_scripts/tests subfolder.
+
+        For example, if Issues List issue 42 relates to solving a bug, the folder
+        "tests/issue_042_2023_10_BugFix" subfolder would contain example files
+        recreate the issue along with text or Word doc documentation exlaining
         the cause of the bug and how it was fixed
 
     Naming and Case Conventions:
-    * lowercase for project-specific attributes except if creates ambiguity; 
+    * lowercase for project-specific attributes except if creates ambiguity;
       then use underscore to separate words
-    * self.path_xxx is a complete directory path with os-specific separator as 
+    * self.path_xxx is a complete directory path with os-specific separator as
       last character
     * self.pf_xxx is a complete directory path + filename
     * self.f_xxx is a filename with extension
@@ -50,7 +50,7 @@ class Files():
         self.proj_abbrev = proj_abbrev
 
         #Initialize Class attributes
-        self.path_root = '' 
+        self.path_root = ''
         self.path_scripts = ''
         self.path_tests = ''
         self.path_data = ''
@@ -66,7 +66,7 @@ class Files():
         #Optional subdirectory within tests folder - to contain issue-specific files
         if IsTest: self.path_subdir_tests = TestsSubdir
 
-    def SetAllProjectPaths(self):  
+    def SetAllProjectPaths(self):
         """
         Set strings for project-specific files and paths
         """
@@ -84,7 +84,7 @@ class Files():
 
         #Example for Standalone project file
         self.pf_xyz = self.path_data + 'xyz.xlsx'
-        
+
         #Example for Feather or xlsx database in colinfo.xlsx
         self.f_abcdata = 'abcdata.feather'
         self.pf_abcdata = self.path_data + self.f_abcdata
@@ -93,7 +93,7 @@ class Files():
     def SetFolderPaths(self):
       """
       Set Project subfolder paths
-      """        
+      """
       self.path_scripts = self.lstpaths[1]
       self.path_tests = self.path_scripts + 'tests' + os.sep
       self.path_data = self.path_root + self.proj_abbrev + '_data' + os.sep
@@ -109,7 +109,7 @@ class Files():
         self.path_data = self.path_tests
 
         #reassign data path if tests subdirectory specified
-        if len(self.TestsSubdir) > 0: 
+        if len(self.TestsSubdir) > 0:
           self.path_subdir_tests = self.TestsSubdir
           self.path_data = self.path_data + self.path_subdir_tests + os.sep
 
