@@ -11,13 +11,11 @@ from pathlib import Path
 #Global variables for Project Name (e.g. root folder name) and project folder prefix
 ProjName = 'Example_Project_With_ProjFiles_Code'
 proj_abbrev = 'example'
-folder_home = ''
 
 #Set paths to enable importing projfiles as library
-PF_thisfile = inspect.getframeinfo(inspect.currentframe()).filename
-path_tests = str(os.path.dirname(os.path.abspath(PF_thisfile)))
-path_scripts = os.sep.join(path_tests.split(os.sep)[0:-1])
-path_projfiles = path_scripts + os.sep + 'projfiles'
+pf_thisfile = inspect.getframeinfo(inspect.currentframe()).filename
+path_tests = str(os.path.dirname(os.path.abspath(pf_thisfile)))
+path_projfiles = os.sep.join(path_tests.split(os.sep)[0:-1] + ['projfiles', ''])
 if not path_projfiles in sys.path: sys.path.append(path_projfiles)
 import projfiles
 
@@ -30,7 +28,7 @@ def files():
     Files Class fixture for testing
     JDL 1/16/23
     """
-    return projfiles.Files(proj_abbrev, PFHome=folder_home, IsTest=False)
+    return projfiles.Files(proj_abbrev)
 
 @pytest.fixture
 def files_IsTest():
@@ -38,64 +36,42 @@ def files_IsTest():
     Files Class fixture for testing - IsTest=True
     JDL 1/17/23
     """
-    return projfiles.Files(proj_abbrev, PFHome=folder_home, IsTest=True)
+    return projfiles.Files(proj_abbrev, IsTest=True, subdir_tests='xxx')
 
 """
 ProjectPaths Class testing
 """
 def test_Files_SetAllProjectPaths(files):
     """
-    JDL 1/17/23
+    JDL 1/17/23; Modified 4/12/23 after SetGenericProjectPaths added to __init__
     """
-    files.SetAllProjectPaths()
-
-    
     assert files.path_scripts.split(os.sep)[-2] == proj_abbrev + '_scripts'
     assert files.path_tests.split(os.sep)[-2] == 'tests'
     assert files.path_data.split(os.sep)[-2] == proj_abbrev + '_data'
     assert files.path_case_studies.split(os.sep)[-2] == proj_abbrev + '_case_studies'
 
-
 def test_Files_SetFolderPathsIsTest(files_IsTest):
     """
-    JDL 1/16/23
+    JDL 1/16/23; Modified 4/12/23 after SetGenericProjectPaths added to __init__
     """
-    Files_SetPaths(files_IsTest)
-
     sExpected = files_IsTest.path_scripts + 'tests' + os.sep
     assert files_IsTest.path_root == sExpected
-    assert files_IsTest.path_data.split(os.sep)[-2] == 'tests'
-
-    #With a tests subdirectory
-    files_IsTest.TestsSubdir = 'xxx'
-    files_IsTest.path_subdir_tests = 'xxx'
-    files_IsTest.SetFolderPaths()
     assert files_IsTest.path_data.split(os.sep)[-3] == 'tests'
     assert files_IsTest.path_data.split(os.sep)[-2] == 'xxx'
 
 def test_Files_SetFolderPaths(files):
     """
-    JDL 1/16/23
+    JDL 1/16/23; Modified 4/12/23 after SetGenericProjectPaths added to __init__
     """
-    Files_SetPaths(files)
     assert files.path_scripts.split(os.sep)[-2] == proj_abbrev + '_scripts'
     assert files.path_tests.split(os.sep)[-2] == 'tests'
     assert files.path_data.split(os.sep)[-2] == proj_abbrev + '_data'
     assert files.path_case_studies.split(os.sep)[-2] == proj_abbrev + '_case_studies'
 
-def Files_SetPaths(files_instance):
-    """ 
-    SetFolderPaths
-    """
-    files_instance.BuildLstPaths(3)
-    files_instance.SetPathRoot()
-    files_instance.SetFolderPaths()
-
 def test_Files_SetPathRoot(files):
     """
     JDL 1/16/23
     """
-    files.SetPathRoot()
     assert files.path_root.split(os.sep)[-2] == ProjName
 
 def test_Files_BuildLstPaths(files):
@@ -103,13 +79,9 @@ def test_Files_BuildLstPaths(files):
     JDL 1/16/23
     """
     #Build directory string for projfiles.py path + file and then its path
-    sPF_projfiles = path_scripts + os.sep + 'projfiles' + os.sep + 'projfiles.py'
-    assert sPF_projfiles.split(os.sep)[-1] == 'projfiles.py'
-    assert sPF_projfiles.split(os.sep)[-3] == proj_abbrev + '_scripts'
-
-    #Based on Project/proj_scripts/projfiles/projfiles.py
-    iLevels = 3 
-    files.BuildLstPaths(iLevels)
+    pf_projfiles = path_projfiles+ 'projfiles.py'
+    assert pf_projfiles.split(os.sep)[-1] == 'projfiles.py'
+    assert pf_projfiles.split(os.sep)[-3] == proj_abbrev + '_scripts'
 
     #Check the trailing item in each directory path (last item is '' due to delim at end)
     assert files.lstpaths[2].split(os.sep)[-2] == ProjName
@@ -133,9 +105,9 @@ def test_Files_LocatePaths():
     directory path for the file being run regardless of where run from
     JDL Jan 16, 2023
     """
-    #A robust way to get the directory for a file being run
-    PF_thisfile = inspect.getframeinfo(inspect.currentframe()).filename
-    path_tests = str(os.path.dirname(os.path.abspath(PF_thisfile)))
+    #A robust (for *.py not *.ipynb) way to get the directory for a file being run
+    pf_thisfile = inspect.getframeinfo(inspect.currentframe()).filename
+    path_tests = str(os.path.dirname(os.path.abspath(pf_thisfile)))
     assert path_tests.split(os.sep)[-1] == 'tests'
 
     #A robust way to get the filename
