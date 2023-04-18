@@ -1,4 +1,4 @@
-#Version 4/12/23
+#Version 4/18/23
 #J.D. Landgrebe/Data-Delve Engineer LLC
 #Covered under MIT Open Source License (https://github.com/jlandgre/Python_Projfiles)
 import inspect, os
@@ -60,6 +60,7 @@ class Files():
     def SetGenericProjectPaths(self):
         """
         Set strings for project-specific files and paths
+        Updated 4/18/23
         """
         #Instance Project Paths and set top-level folder names and paths
         iLevels = 3
@@ -79,11 +80,12 @@ class Files():
         if self.IsTest:
           self.path_root = self.path_tests
           self.path_data = self.path_tests
+          self.path_home = self.path_tests
 
           #reassign data path if tests subdirectory specified
           if len(self.subdir_tests) > 0:
             self.path_data = self.path_data + self.subdir_tests + os.sep
-            #self.path_home = self.path_data
+            self.path_home = self.path_data
 
         #Store user-specific credentials/tokens outside of main project folder
         self.pf_credentials = self.path_root + 'credentials.csv'
